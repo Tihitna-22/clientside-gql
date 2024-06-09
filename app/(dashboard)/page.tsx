@@ -59,7 +59,7 @@ const IssuesPage = () => {
 {error && <div>error</div>}
       {data && data.issues.map((issue: any) => (
         <div key={issue.id}>
-          <Issue issue={issue} />
+          <Issue issue={issue} reply={reply} />
         </div>
       ))}
 
