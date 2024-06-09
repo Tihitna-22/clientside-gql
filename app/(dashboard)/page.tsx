@@ -1,7 +1,6 @@
 'use client'
 
 import PageHeader from '../_components/PageHeader'
-import { useMutation, useQuery } from 'urql'
 import { useState } from 'react'
 import {
   Button,
@@ -17,11 +16,15 @@ import {
 } from '@nextui-org/react'
 import { PlusIcon } from 'lucide-react'
 import Issue from '../_components/Issue'
+import { useQuery, useMutation } from '@urql/next'
+import { IssuesQuery } from '@/gql/issuQuery'
+
 
 const IssuesPage = () => {
   const { isOpen, onOpen, onOpenChange } = useDisclosure()
   const [issueName, setIssueName] = useState('')
   const [issueDescription, setIssueDescription] = useState('')
+  const [{data,error, fetching} , reply] = useQuery({ query: IssuesQuery })
 
   const onCreate = async (close) => {}
 
@@ -37,8 +40,9 @@ const IssuesPage = () => {
           </button>
         </Tooltip>
       </PageHeader>
-
-      {[].map((issue) => (
+{fetching && <Spinner  />}
+{error && <div>error</div>}
+      {data && data.issues.map((issue: any) => (
         <div key={issue.id}>
           <Issue issue={issue} />
         </div>

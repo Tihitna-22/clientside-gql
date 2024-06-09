@@ -1,4 +1,4 @@
-import { gql } from 'urql'
+import { gql } from '@urql/next'
 
 export const SigninMutation = gql`
   mutation SignIn($input: AuthInput!) {
