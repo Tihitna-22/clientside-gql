@@ -18,6 +18,7 @@ import { PlusIcon } from 'lucide-react'
 import Issue from '../_components/Issue'
 import { useQuery, useMutation } from '@urql/next'
 import { IssuesQuery } from '@/gql/issuQuery'
+import { CreateIssueMutation } from '@/gql/createIssuesMutation'
 
 
 const IssuesPage = () => {
@@ -26,7 +27,21 @@ const IssuesPage = () => {
   const [issueDescription, setIssueDescription] = useState('')
   const [{data,error, fetching} , reply] = useQuery({ query: IssuesQuery })
 
-  const onCreate = async (close) => {}
+  const [issuResult, createNewIssue] = useMutation(CreateIssueMutation)
+
+  const onCreate = async (close:any) => {
+    const result = await createNewIssue({
+      input: { name: issueName, content: issueDescription },
+    })
+
+    if (result.data) {
+      await reply() 
+      close()
+      setIssueName('')
+      setIssueDescription('')
+    }
+  }
+
 
   return (
     <div>
@@ -89,7 +104,7 @@ const IssuesPage = () => {
                 </div>
               </ModalBody>
               <ModalFooter className="border-t">
-                <Button variant="ghost" onPress={() => onOpenChange(false)}>
+                <Button variant="ghost" onPress={() => onOpenChange()}>
                   Cancel
                 </Button>
                 <Button
